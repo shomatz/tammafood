@@ -34,7 +34,7 @@
                             <li><a href="#note-tab" data-toggle="tab">Nota Penjualan</a></li>
                             <li><a href="#label-badge-tab" data-toggle="tab">Item Penjualan</a></li>
                             <li><a href="#nav-stock" data-toggle="tab">Stock Grosir</a></li>
-                            <li><a href="#nav-ReqRetail" data-toggle="tab">Request Retail</a></li>
+                            
                           </ul>
                     <div id="generalTabContent" class="tab-content responsive">
 
@@ -202,6 +202,7 @@
                         </form>   
                               </div>
                             </div>
+@if($ket == 'create')
 
                       <!-- div alert-tab -->
                       <div id="alert-tab" class="tab-pane fade in active">
@@ -359,12 +360,175 @@
                                     </button>
                                     <button class="btn btn-info ladda-button" data-style="zoom-in" type="button" onclick="sal_save_onProgres()"><span class="ladda-label">On Progress</span></button>
 
-                                    <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#proses">Proses</button>
+                                    <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#proses">Submit</button>
                                   </div>
                           </form>   
                           </div>                                       
                         </div>
+@else
+    <div id="alert-tab" class="tab-pane fade in active">
+   
 
+                          <div id="alert-tab" class="tab-pane fade in active">
+                        <div class="row">
+                          <div class="col-md-12">
+                            <div class="col-md-12 col-sm-12 col-xs-12 tamma-bg" style="padding-bottom: 25px;padding-top: 5px;">
+                              <form id="save_sform">
+                                            <div class="col-md-9 col-sm-6 col-xs-12" style="margin-top: 15px;">
+                                              
+                                                <label class="control-label tebal" for="nama" >Nama Customer</label>
+                                               
+                                                  <div class="input-group input-group-sm" style="width: 100%;">
+                                                    <input type="text" id="nama" name="s_member" class="form-control" onkeyup="setnama()" value="{{$edit[0]->c_name}}">
+
+                                                    <input type="hidden" id="id_cus" name="id_cus" class="form-control" value="{{$edit[0]->s_customer}}">
+                                                    <input type="hidden" id="sd_id" name="sd_id" class="form-control" value="{{$edit[0]->sd_id}}">                                   
+                                                    <span class="input-group-btn"><button  type="button" class="btn btn-info btn-sm btn_simpan" data-toggle="modal" data-target="#myModal"><i class="fa fa-plus"></i></button></span>
+                                                   
+                                                  </div>
+                                              
+                                            </div>
+
+
+                                            <div class="col-md-3 col-sm-6 col-xs-12" style="margin-top: 15px;">
+                                              
+                                                <label for="tgl_faktur" class="control-label tebal">Tanggal Faktur</label>
+                                                
+                                                  <div class="input-group input-group-sm" style="width: 100%;">
+                                                    <input id="tgl_faktur" type="text" name="s_date" class="form-control" readonly="readonly" value="{{ date('d-m-Y') }}">
+                                                  </div>
+                                             
+                                            </div>
+
+                                            <div class="col-md-9 col-sm-6 col-xs-12" style="margin-top: 15px;">
+                                              
+                                               <label class="control-label tebal" for="alamat">Alamat Customer</label>
+                                                
+                                                  <div class="input-group input-group-sm" style="width: 100%;">
+                                                    <input type="text" id="alamat2" name="sm_alamat" class="form-control" value="{{$edit[0]->c_address}}  {{$edit[0]->c_hp}}">  
+                                                  </div>
+                                            </div>
+
+                                          
+                                            <div class="col-md-3 col-sm-6 col-xs-12" style="margin-top: 15px;">
+                                                
+                                               <label class="control-label tebal" for="no_faktur" >Nomor Faktur</label>
+                                               
+                                                <div class="input-group input-group-sm" style="width: 100%;">
+                                                  <input type="text" id="no_faktur" name="s_nota" class="form-control" readonly="true" value="{{$edit[0]->s_note}}">
+                                                </div>
+                                              
+                                            </div>
+
+                                            <div class="col-md-3 col-md-offset-9 col-sm-12 col-xs-12" style="margin-top: 15px;">
+                                              
+                                                <label class="control-label tebal" for="total_amount">Total Amount</label>
+                                               
+                                                  <div class="input-group input-group-sm" style="width: 100%;">
+                                                    <input type="text" class="form-control" readonly="true" name="s_net"  id="amount">
+                                                    <input type="hidden" name="s_staff" value="{{ Auth::user()->m_id}}" >
+                                                  </div>
+                                            </div>     
+                              </form>
+                            </div>
+                          </div>
+                        
+                         <div class="col-md-12 col-sm-12 col-xs-12">      
+                                <div style="padding-top: 10px;padding-bottom: 10px;">     
+                                  
+                                  @include('penjualan.POSretail.item_edit')
+
+                                </div>
+                          </div>  
+                        
+                        <form id="save_item">              
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                               <div class="col-md-3 col-md-offset-9 col-sm-6 col-sm-offset-6 col-xs-12 tamma-bg" style="margin-bottom: 20px; padding-bottom:5px;padding-top: 10px;">
+                                <div class="col-md-12 col-sm-12 col-xs-12 ">
+                                    
+                                    <div class="form-group">
+                                        <label class="control-label tebal" for="penjualan">Total Penjualan</label>
+                                      <div class="input-group input-group-sm " style="width: 100%;">
+                                          <input type="text" name="s_gross" readonly="true" id="total" class="form-control total" style="text-align: right;" value="Rp. {{ number_format( $edit[0]->s_net ,2,',','.')}}">
+                                      </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label tebal" for="discount">Total Discount</label>
+                                      <div class="input-group input-group-sm" style="width: 100%;">
+                                        <input type="text" name="s_disc_value" readonly="true" class="form-control" style="text-align: right;">
+                                      </div>
+                                    </div>
+                                    <div class="form-group" type="hidden">
+                                        <label class="control-label tebal" for="penjualan">PPN</label>
+                                      <div class="input-group input-group-sm" style="width: 100%;">
+                                        <input type="text" type="hidden" name="s_pajak" readonly="true" class="form-control" style="text-align: right;">
+                                      </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label tebal" for="jumlah">Jumlah yang Di Bayarkan</label>
+                                      <div class="input-group input-group-sm bayar" style="width: 100%;">
+                                        <input type="text" name="s_dibayarkan" id="bayar" value="" class="i_price form-control total" style="text-align: right;"
+                                        onkeyup="rege(event,'i_price');" onblur="setRupiah(event,'i_price')" onclick="setAwal('event','i_price')" >
+                                      </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label tebal" for="jumlah">Kembalian</label>
+                                      <div class="input-group input-group-sm" style="width: 100%;">
+                                        <input type="text" name="s_kembalian" value="0" id="kembalian" readonly="true" class="form-control kemblaian" style="text-align: right;">
+                                      </div>
+                                    </div>                                  
+                                </div>
+                                </div>
+                              </div>
+                               <!-- Start Modal Proses -->
+                                <div class="modal fade" id="proses" role="dialog">
+                                    <div class="modal-dialog">
+                                        <!-- Modal content-->
+                                          <div class="modal-content">
+                                            <div class="modal-header" style="background-color: #e77c38;">
+                                              <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                              <h4 class="modal-title" style="color: white;">Proses Form Penjualan Retail</h4>
+                                            </div>
+
+                                            <div class="modal-body">
+                                              
+                                              <div class="col-md-12 col-sm-12 col-xs-12 tamma-bg" style="margin-bottom: 20px; padding-bottom:15px;padding-top:15px; ">
+
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <label class="control-label tebal" for="cara" >Cara Pembayaran</label>
+                                                </div>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                      <div class="input-group input-group-sm" style="width: 100%;">
+                                                        <select class="form-control" name="s_pembayaran" id="cara">
+                                                          <option value="Tunai">Tunai</option>
+                                                          <option value="Deposit">Deposit</option>
+                                                          <option value="Tempo">Tempo</option>
+                                                        </select>
+                                                      </div>
+                                                </div>      
+                                              </div>
+                                            </div>
+                                        
+                                            <div class="modal-footer">
+                                              <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+                                              <button class="btn btn-primary ladda-button" data-style="zoom-in" type="button" onclick="sal_save_finalUpdate()">
+                                                <span class="ladda-label">Proses</span></button>
+                                            </div>
+                                          </div>
+                                      </div>
+                                  </div>
+                                <!-- End Modal Proses -->
+                                  <div class="col-md-12 col-sm-12 col-xs-12" align="right" >
+                                    <button class="btn btn-warning ladda-button" data-style="zoom-in" type="button" onclick="sal_save_draftUpdate()"><span class="ladda-label">Draft</span>
+                                    </button>
+                                     <button class="btn btn-info ladda-button" data-style="zoom-in" type="button" onclick="sal_save_onProgresUpdate()"><span class="ladda-label">On Progress</span></button>
+                                    <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#proses">Submit</button>
+                                  </div>
+                            </form>   
+                            </div>                                       
+                          </div>
+                        </div>
+@endif                           
                           <!-- div note-tab -->
                           <div id="note-tab" class="tab-pane fade">
                             <div class="row">
@@ -409,7 +573,7 @@
                           <!-- End DIv note-tab -->
                                        
                                         <div class="modal fade" id="myItem" role="dialog">
-                                          <div class="modal-dialog" >
+                                          <div class="modal-dialog modal-lg" style="width: 90%;margin-left: auto;margin-top: 30px;">
                                           
                                             <!-- Modal content-->
                                             <div class="modal-content">
@@ -475,7 +639,7 @@
                            <!--end div label-badge-tab -->
 
                            @include('penjualan.POSgrosir.StokGrosir.stock')
-                           @include('penjualan.POSgrosir.ReqRetail')
+                        {{--    @include('penjualan.POSgrosir.ReqRetail') --}}
                   </div>
         </div>
         <!-- End div generalTab -->
@@ -565,85 +729,7 @@
 
         });
 
-    $('#data3').dataTable({
-          "responsive":true,
-
-          "pageLength": 10,
-        "lengthMenu": [[10, 20, 50, - 1], [10, 20, 50, "All"]],
-        "language": {
-            "searchPlaceholder": "Cari Data",
-            "emptyTable": "Tidak ada data",
-            "sInfo": "Menampilkan _START_ - _END_ Dari _TOTAL_ Data",
-            "sSearch": '<i class="fa fa-search"></i>',
-            "sLengthMenu": "Menampilkan &nbsp; _MENU_ &nbsp; Data",
-            "infoEmpty": "",
-            "paginate": {
-                    "previous": "Sebelumnya",
-                    "next": "Selanjutnya",
-                 }
-          }
-
-        });
-
-      $('#data4').dataTable({
-          "responsive":true,
-
-          "pageLength": 10,
-        "lengthMenu": [[10, 20, 50, - 1], [10, 20, 50, "All"]],
-        "language": {
-            "searchPlaceholder": "Cari Data",
-            "emptyTable": "Tidak ada data",
-            "sInfo": "Menampilkan _START_ - _END_ Dari _TOTAL_ Data",
-            "sSearch": '<i class="fa fa-search"></i>',
-            "sLengthMenu": "Menampilkan &nbsp; _MENU_ &nbsp; Data",
-            "infoEmpty": "",
-            "paginate": {
-                    "previous": "Sebelumnya",
-                    "next": "Selanjutnya",
-                 }
-          }
-
-        });
-
-      $('#data5').dataTable({
-          "responsive":true,
-
-          "pageLength": 10,
-        "lengthMenu": [[10, 20, 50, - 1], [10, 20, 50, "All"]],
-        "language": {
-            "searchPlaceholder": "Cari Data",
-            "emptyTable": "Tidak ada data",
-            "sInfo": "Menampilkan _START_ - _END_ Dari _TOTAL_ Data",
-            "sSearch": '<i class="fa fa-search"></i>',
-            "sLengthMenu": "Menampilkan &nbsp; _MENU_ &nbsp; Data",
-            "infoEmpty": "",
-            "paginate": {
-                    "previous": "Sebelumnya",
-                    "next": "Selanjutnya",
-                 }
-          }
-
-        });
-
-        $('#data6').dataTable({
-          "responsive":true,
-
-          "pageLength": 10,
-        "lengthMenu": [[10, 20, 50, - 1], [10, 20, 50, "All"]],
-        "language": {
-            "searchPlaceholder": "Cari Data",
-            "emptyTable": "Tidak ada data",
-            "sInfo": "Menampilkan _START_ - _END_ Dari _TOTAL_ Data",
-            "sSearch": '<i class="fa fa-search"></i>',
-            "sLengthMenu": "Menampilkan &nbsp; _MENU_ &nbsp; Data",
-            "infoEmpty": "",
-            "paginate": {
-                    "previous": "Sebelumnya",
-                    "next": "Selanjutnya",
-                 }
-          }
-
-        });
+ 
     });
 
    
@@ -774,6 +860,99 @@
         })
       }
 
+      function sal_save_finalUpdate()
+      {
+        var bb = $('#save_sform :input').serialize();
+        var cc = $('#save_item :input').serialize();
+        var data=tableDetail.$('input').serialize();
+        $.ajax({
+          url : baseUrl + "/penjualan/POSgrosir/grosir/sal_save_finalupdate",
+          type: 'get',
+          data: bb+'&'+cc+'&'+data,
+
+          success:function(response){
+            $('#proses').modal('hide');
+              $("input[name='s_member']").val('');
+              $("input[name='s_gross']").val('');
+              $("input[name='s_disc_percent']").val('');
+              $("input[name='s_disc_value']").val('');
+              $("input[name='s_pajak']").val('');
+              $("input[name='s_net']").val('');
+              $("input[name='sd_qty[]']").val('');
+              $("input[name='sd_sell[]']").val('');
+              $("input[name='s_pembayaran[]']").val('');
+              $("input[name='s_dibayarkan']").val('');
+              $("input[name='s_kembalian']").val('');
+              $("input[name='sd_disc_percent[]']").val('');
+              $("input[name='sd_disc_value[]']").val('');
+              alert('Berhasil');
+              window.location.href = "/tammafood/penjualan/POSgrosir/index";
+              }         
+        })
+      }  
+
+      function sal_save_onProgresUpdate()
+      {
+        var bb = $('#save_sform :input').serialize();
+        var cc = $('#save_item :input').serialize();
+        var data=tableDetail.$('input').serialize();
+        $.ajax({
+          url : baseUrl + "/penjualan/POSgrosir/grosir/sal_save_onProgresUpdate",
+          type: 'get',
+          data: bb+'&'+cc+'&'+data,
+
+          success:function(response){
+            $('#proses').modal('hide');
+              $("input[name='s_member']").val('');
+              $("input[name='s_gross']").val('');
+              $("input[name='s_disc_percent']").val('');
+              $("input[name='s_disc_value']").val('');
+              $("input[name='s_pajak']").val('');
+              $("input[name='s_net']").val('');
+              $("input[name='sd_qty[]']").val('');
+              $("input[name='sd_sell[]']").val('');
+              $("input[name='s_pembayaran[]']").val('');
+              $("input[name='s_dibayarkan']").val('');
+              $("input[name='s_kembalian']").val('');
+              $("input[name='sd_disc_percent[]']").val('');
+              $("input[name='sd_disc_value[]']").val('');
+              alert('Berhasil');
+              window.location.href = "/tammafood/penjualan/POSgrosir/index";
+              }         
+        })
+      }
+
+      function sal_save_draftUpdate()
+      {
+        var bb = $('#save_sform :input').serialize();
+        var cc = $('#save_item :input').serialize();
+        var data=tableDetail.$('input').serialize();
+        $.ajax({
+          url : baseUrl + "/penjualan/POSgrosir/grosir/sal_save_draftUpdate",
+          type: 'get',
+          data: bb+'&'+cc+'&'+data,
+
+          success:function(response){
+            $('#proses').modal('hide');
+              $("input[name='s_member']").val('');
+              $("input[name='s_gross']").val('');
+              $("input[name='s_disc_percent']").val('');
+              $("input[name='s_disc_value']").val('');
+              $("input[name='s_pajak']").val('');
+              $("input[name='s_net']").val('');
+              $("input[name='sd_qty[]']").val('');
+              $("input[name='sd_sell[]']").val('');
+              $("input[name='s_pembayaran[]']").val('');
+              $("input[name='s_dibayarkan']").val('');
+              $("input[name='s_kembalian']").val('');
+              $("input[name='sd_disc_percent[]']").val('');
+              $("input[name='sd_disc_value[]']").val('');
+              alert('Berhasil');
+              window.location.href = "/tammafood/penjualan/POSgrosir/index";
+              }         
+        })
+      } 
+
     function lihatDetail(idDetail)
     {
        $.ajax({
@@ -786,18 +965,6 @@
       });   
     }
 
-    function lihatDetailReq(idDetail)
-    {
-       $.ajax({
-        url : baseUrl + "/penjualan/POSgrosir/getdataGReq",
-        type: 'get',
-        data: {g:idDetail},
-        success:function(response){
-          $('#detailReqRit').html(response);
-        }
-      });
-        
-    }
 
       // customer 
     $( "#nama" ).autocomplete({
@@ -858,13 +1025,13 @@
       var hasilRp = convertToRupiah(hasil);
       $('.hasil-'+kode).val(hasilRp);
       console.log(hasilRp);
-      alert('d')
       UpdateTotal();
     } 
-    var index=0;
-    var tamp=[];
-    function tambah() 
-      {   
+@if ($ket == 'create') 
+      var index=0;
+      var tamp=[];
+      function tambah() 
+      { 
         var kode  =$('#kode').val();      
         var nama  =$('#detailnama').val();             
         var harga =SetFormRupiah($('#harga').val());  
@@ -885,8 +1052,8 @@
             '<input size="30" style="text-align:right" type="number"  name="sd_qty[]" class="sd_qty form-control qty-'+kode+'" value="'+qty+'" onkeyup="UpdateHarga(\''+kode+'\'); qtyInput(\''+stok+'\', \''+kode+'\')" onchange="qtyInput(\''+stok+'\', \''+kode+'\')"> ',
             satuan+'<input type="hidden" name="satuan[]" class="satuan" value="'+satuan+'"> ',
             '<input type="text" size="10" readonly style="text-align:right" name="harga_item[]" class="harga_item form-control harga-'+kode+'" value="'+harga+'"> ',
-            '<input type="text" size="10"  style="text-align:right" name="" class="form-control" value="">',
-            '<input type="text" size="10"  style="text-align:right" name="" class="form-control" value="">',
+            '<input type="text" size="10"  style="text-align:right" name="" class="form-control discpercent" value="" onkeyup="discpercent(this, event)"> ',
+            '<input type="text" size="10"  style="text-align:right" name="" class="form-control discvalue" value="" onkeyup="discvalue(this, event)" >',
             '<input type="text" size="200" readonly style="text-align:right" name="hasil[]" id="hasil" class="form-control hasil hasil-'+kode+'" value="'+x+'"><input type="hidden" size="200" readonly style="text-align:right" name="" id="hasil2" class="hasil2 form-control" value="'+b+'">',          
             Hapus
             ]);
@@ -910,53 +1077,6 @@
 
             UpdateTotal();
         }
-
-        $('.total').keyup(function() {            
-                var sum = angkaDesimal($('#total').val());                  
-                var bayar = angkaDesimal($('#bayar').val());
-                var hasil=parseFloat(bayar - sum).toFixed(2);
-               $('#kembalian').val(SetFormRupiah(hasil));
-            });  
-
-    function hapus(a)
-    {
-      var par = a.parentNode.parentNode;
-      tableDetail.row(par).remove().draw(false);
-
-      var sum = 0;
-          $('.hasil').each(function() {
-              sum += Number($(this).val());
-          });
-          $('#total').val(sum);
-
-      var inputs = document.getElementsByClassName( 'kode' ),
-      names  = [].map.call(inputs, function( input ) {
-          return input.value;
-      });
-      tamp = names;
-
-      UpdateTotal();
-    }
-
-  // function setQty(){
-  //     var qty = $('#s_qty').val();
-  //     var input = $('#qty').val();
-  //     qty = parseInt(qty);
-  //     input = parseInt(input);
-  //     if (input > qty) {
-  //       $('#qty').val('');
-  //     }
-  //   }
-
-    function qtyInput(stok, kode){
-      input = $('.qty-'+kode).val();
-      input = parseInt(input);
-      stok = parseInt(stok);
-      if (input > stok || input < 1) {
-        $('.qty-'+kode).val(1);
-      }
-      UpdateHarga(kode);
-    }
           $('#qty').keypress(function(e){
               var charCode;
               if ((e.which && e.which == 13)) {
@@ -982,6 +1102,179 @@
 
               }
            });
+@else
+      $("input[name='item']").focus();
+      var index=0;
+      var tamp=[];
+      function tambahEdit() 
+      { 
+        var kode  =$('#kode').val();      
+        var nama  =$('#detailnama').val();             
+        var harga =SetFormRupiah($('#harga').val());  
+        var y     =($('#harga').val());          
+        var qty   =parseInt($('#qty').val());
+        var satuan=$('#satuan').val();
+        var hasil = parseFloat(qty * y).toFixed(2);
+        var x = SetFormRupiah(hasil);
+        var b = angkaDesimal(x);
+        var stok = $('#s_qty').val();
+        var Hapus = '<button type="button" class="btn btn-danger hapus" onclick="hapus(this)"><i class="fa fa-trash-o"></i></button>';
+        var index = tamp.indexOf(kode);
+      
+        if ( index == -1){         
+          tableDetail.row.add([
+              '<input type="hidden" name="sd_sales[]" class="kode_item kode" >'+
+              '<input type="hidden" name="sd_detailid[]" class="kode_item kode" >'+
+            nama+'<input type="hidden" name="kode_item[]" class="kode_item kode" value="'+kode+'"><input type="hidden" name="nama_item[]" class="nama_item" value="'+nama+'"> ',
+            '<input size="30" style="text-align:right" type="number"  name="sd_qty[]" class="sd_qty form-control qty-'+kode+'" value="'+qty+'" onkeyup="UpdateHarga(\''+kode+'\'); qtyInput(\''+stok+'\', \''+kode+'\')" onchange="qtyInput(\''+stok+'\', \''+kode+'\')">',
+            satuan+'<input type="hidden" name="satuan[]" class="satuan" value="'+satuan+'"> ',
+            '<input type="text" size="10" readonly style="text-align:right" name="harga_item[]" class="harga_item form-control harga-'+kode+'" value="'+harga+'">',
+            '<input type="text" size="10"  style="text-align:right" name="" class="form-control discpercent" value="" onkeyup="discpercent(this, event)"> ',
+            '<input type="text" size="10"  style="text-align:right" name="" class="form-control discvalue" value="" onkeyup="discvalue(this, event)" >',
+            '<input type="text" size="200" readonly style="text-align:right" name="hasil[]" id="hasil" class="form-control hasil hasil-'+kode+'" value="'+x+'"><input type="hidden" size="200" readonly style="text-align:right" name="" id="hasil2" class="hasil2 form-control" value="'+b+'">',          
+            Hapus
+            ]);
+          tableDetail.draw();
+
+        index++;
+        tamp.push(kode);
+            }else{
+            var qtyLawas= parseInt($(".qty-"+kode).val());
+            $(".qty-"+kode).val(qtyLawas+qty);
+            var q = parseInt(qtyLawas+qty);
+            var l = parseFloat(q * y).toFixed(2);;
+            var k = SetFormRupiah(l);
+            $(".hasil-"+kode).val(k);
+            }
+
+            $(function(){
+            var values = $("input[name='sd_qty[]']")
+            .map(function(){return $(this).val();}).get();
+            });
+
+            UpdateTotal();
+        }
+      
+
+
+          $('#qty').keypress(function(e){
+              var charCode;
+              if ((e.which && e.which == 13)) {
+                charCode = e.which;
+              }else if (window.event) {
+                  e = window.event;
+                  charCode = e.keyCode;
+              }
+              if ((e.which && e.which == 13)){
+                var isi   = $('#qty').val();
+                var jumlah= $('#detailnama').val();
+                var stok  = $('#s_qty').val();
+                if(isi == '' || jumlah == '' || stok == ''){
+                  toastr.warning('Item Jumlah Stok tidak boleh kosong');
+                  return false;
+              }
+                tambahEdit();
+                $("input[name='item']").val('');
+                $("input[name='s_qty']").val('');
+                $("input[name='qty']").val('');
+                $("input[name='item']").focus(); 
+                   return false;
+
+              }
+           });
+        
+@endif
+
+          var hpercent = 0;
+    function discpercent(inField, e){
+        var getIndex = $('input.discpercent:text').index(inField);        
+        var diskon = $('input.discpercent:text:eq('+getIndex+')').val();
+        var harga = $('input.harga_item:text:eq('+getIndex+')').val();
+        var qty = $('input.sd_qty:eq('+getIndex+')').val();
+        harga = convertToAngka(harga);
+        harga = parseInt(harga);
+        diskon = parseInt(diskon);
+        qty = parseInt(qty);
+
+        hasill = harga * qty;
+        hpercent = hasill * diskon/100;
+        hasill = hasill - (hasill * diskon/100);
+
+        hasill = convertToRupiah(hasill);
+        var dispercent = $('input.hasil:text:eq('+getIndex+')').val(hasill);
+        UpdateTotal();
+    }
+
+    function discvalue(inField, e){
+        var getIndex = $('input.discvalue:text').index(inField);   
+        var diskon = $('input.discvalue:text:eq('+getIndex+')').val();
+        var harga = $('input.harga_item:text:eq('+getIndex+')').val();
+        var qty = $('input.sd_qty:eq('+getIndex+')').val();
+
+        harga = convertToAngka(harga);
+        harga = parseInt(harga);
+        diskon = parseInt(diskon);
+        qty = parseInt(qty);
+    
+        hasil = harga * qty;
+
+        hasil = hasil - hpercent - diskon;
+        hasil = convertToRupiah(hasil);
+        $('input.hasil:text:eq('+getIndex+')').val(hasil);
+        UpdateTotal();
+    }
+      $('.total').keyup(function() {            
+              var sum = angkaDesimal($('#total').val());                  
+              var bayar = angkaDesimal($('#bayar').val());
+              var hasil=parseFloat(bayar - sum).toFixed(2);
+             $('#kembalian').val(SetFormRupiah(hasil));
+          });  
+      
+
+    function hapus(a)
+    {
+     
+      var par = a.parentNode.parentNode;
+      tableDetail.row(par).remove().draw(false);
+
+      var sum = 0;
+          $('.hasil').each(function() {
+              sum += Number($(this).val());
+          });
+          $('#total').val(sum);
+
+      var inputs = document.getElementsByClassName( 'kode' ),
+      names  = [].map.call(inputs, function( input ) {
+          return input.value;
+      });
+      tamp = names;
+
+      UpdateTotal();
+    }
+
+  function UpdateHarga(kode)
+    {
+      var qty = $('.qty-'+kode).val();
+      var harga = $('.harga-'+kode).val();
+      console.log(harga);
+      var hasil = convertToAngka(harga);
+      console.log(hasil);
+      hasil = hasil * qty;
+      var hasilRp = convertToRupiah(hasil);
+      $('.hasil-'+kode).val(hasilRp);
+      console.log(hasilRp);
+      UpdateTotal();
+    } 
+
+    function qtyInput(stok, kode){
+      input = $('.qty-'+kode).val();
+      input = parseInt(input);
+      stok = parseInt(stok);
+      if (input > stok || input < 1) {
+        $('.qty-'+kode).val(1);
+      }
+      UpdateHarga(kode);
+    }
 
         //request
         $("#rnamaitem").autocomplete({
@@ -1034,29 +1327,6 @@
         var par = a.parentNode.parentNode;
         tableReq.row(par).remove().draw(false);
     }
-    $('#rqty').keypress(function(e)
-    {
-        var charCode;
-        if ((e.which && e.which == 13)) {
-          charCode = e.which;
-        }else if (window.event) {
-            e = window.event;
-            charCode = e.keyCode;
-        }
-        if ((e.which && e.which == 13)){
-          var isi   = $('#rqty').val();
-          var jumlah= $('#rdetailnama').val();
-          if(isi == '' || jumlah == ''){
-            toastr.warning('Item dan Jumlah tidak boleh kosong');
-            return false;
-        }
-          tambahreq();
-          $("#rnamaitem").val('');
-          $("#rqty").val('');
-          $("input[name='rnamaitem']").focus();
-             return false;  
-        }
-    });
 
   function convertToRupiah(angka) 
   {

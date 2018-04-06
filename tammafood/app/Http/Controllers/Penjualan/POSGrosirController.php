@@ -46,31 +46,75 @@ class POSGrosirController extends Controller
           $fatkur = 'XX'  . $year . $month . $date . $idfatkur;
           $idreq = 'REQ'  . $year . $month . $date . $idreq;
 
-          $dataitem = DB::table('m_item')->get();
-
-
-          $detalis = DB::table('d_sales')->where('s_channel','RT')->get();
-
-          $detaliss = DB::table('d_sales_dt')
-            ->join('d_sales', 'd_sales_dt.sd_sales', '=', 'd_sales.s_id' )
-            ->join('m_item', 'm_item.i_id', '=' , 'd_sales_dt.sd_item')->get();
-
-          $leagues = DB::table('d_sales_dt')
-            ->select('s_date','i_name', DB::raw("sum(sd_qty) as jumlah"))
-            ->join('m_item', 'm_item.i_id', '=' , 'd_sales_dt.sd_item')
-            ->join('d_sales', 'd_sales.s_id', '=' , 'd_sales_dt.sd_sales')
-            ->groupBy('sd_item')
-            ->where('s_channel','RT')
+          $stock  = DB::table('d_stock')->where('s_comp','3')->where('s_position','3')
+            ->join('m_item', 'm_item.i_id', '=', 'd_stock.s_item')
             ->get();
+
+          $ket = 'create';
+
+        return view('/penjualan/POSgrosir/index',compact('id_cust','fatkur', 'idreq','stock','ket'));
+    }
+
+    public function edit_sales($id)
+    { 
+        $year = carbon::now()->format('y');
+        $month = carbon::now()->format('m');
+        $date = carbon::now()->format('d');
+
+        //select max dari um_id dari table d_uangmuka
+        $maxid = DB::Table('m_customer')->select('c_id')->max('c_id');
+        $idfatkur = DB::Table('d_sales')->select('s_id')->max('s_id');
+        $idreq = DB::table('d_transferitem')->select('ti_id')->max('ti_id');
+        //untuk +1 nilai yang ada,, jika kosong maka maxid = 1 , 
+        if ($maxid <= 0 || $maxid <= '') {
+          $maxid  = 1;
+        }else{
+          $maxid += 1;
+        }
+
+        if ($idfatkur <= 0 || $idfatkur <= '') {
+          $idfatkur  = 1;
+        }else{
+          $idfatkur += 1;
+        }
+
+        if ($idreq <= 0 || $idreq <= '') {
+          $idreq  = 1;
+        }else{
+          $idreq += 1;
+        }
+        //jika kurang dari 100 maka maxid mimiliki 00 didepannya
+        if ($maxid < 100) {
+          $maxid = '00'.$maxid;
+        }
+          $id_cust = 'CUS' . $month . $year . '/' . 'C001' . '/' .  $maxid; 
+          $fatkur = 'XX'  . $year . $month . $date . $idfatkur;
+          $idreq = 'REQ'  . $year . $month . $date . $idreq;
 
           $stock  = DB::table('d_stock')->where('s_comp','3')->where('s_position','3')
             ->join('m_item', 'm_item.i_id', '=', 'd_stock.s_item')
             ->get();
 
-          //detail request
-          $request = DB::table('d_transferitem')->get();
+          $edit = DB::table('d_sales')
+          ->select('c_id','c_code','c_name','c_hp','c_address','c_type','c_insert','c_update',
+                    'd_sales.s_id as sd_id','s_channel','s_date','s_note','s_staff','s_customer','s_gross',
+                    's_disc_percent','s_disc_value','s_tax','s_net','s_status','d_sales.s_insert as sd_insert',
+                    'd_sales.s_update as sd_update','sd_sales','sd_detailid','sd_item','sd_qty','sd_price','sd_disc_percent',
+                    'sd_disc_value','sd_total','i_id','i_code','i_type','i_group','i_name','i_unit',
+                    'i_price','i_price','i_insert','i_update','d_stock.s_id as d_id','s_comp',
+                    's_position','s_item','s_qty','d_stock.s_insert as d_insert','d_stock.s_update as d_update')
+          ->join('m_customer', 'm_customer.c_id', '=' , 'd_sales.s_customer')
+          ->join('d_sales_dt','d_sales_dt.sd_sales','=','d_sales.s_id')
+          ->join('m_item','m_item.i_id','=','d_sales_dt.sd_item')
+          ->join('d_stock','d_stock.s_item','=','d_sales_dt.sd_item')
+          ->where('s_comp','3')
+          ->where('s_position','3')
+          ->where('d_sales.s_id',$id)
+          ->get();
 
-        return view('/penjualan/POSgrosir/index',compact('id_cust','fatkur','customers','dataitem','cek','detaliss', 'stock','idreq','request','leagues'));
+          $ket = 'edit';
+
+        return view('/penjualan/POSgrosir/index',compact('id_cust','fatkur', 'idreq','stock','edit','ket'));
     }
 
     public function detail(Request $request)
@@ -84,17 +128,6 @@ class POSGrosirController extends Controller
 
           return view('/penjualan/POSgrosir/NotaPenjualan.detail',compact('detaliss'));
       }
-
-    public function detailReq(Request $request)
-      {
-          $request = DB::table('d_transferitem_dt')
-              ->join('d_transferitem','d_transferitem.ti_id','=','d_transferitem_dt.tidt_id')
-              ->join('m_item','m_item.i_id','=','d_transferitem_dt.tidt_item')
-              ->where('ti_id','=',$request->g)->get();
-
-          return view('/penjualan/POSgrosir.detailReq_rit',compact('request'));
-      }
-
 
     public function store(Request $request)
       {
@@ -178,55 +211,6 @@ class POSGrosirController extends Controller
       return Response::json($results); 
       }
 
-    public function autocompletereq(Request $request)
-      {
-        $term = $request->term;
-
-        $results = array();
-        
-        $queries = DB::table('m_item')
-          // ->select('i_id','i_kode','i_nama','i_satuan','i_hargajual','s_qty','i_tipe','s_comp','s_position')
-          ->leftJoin('d_stock','m_item.i_id','=', 'd_stock.s_item')
-          ->where(function ($a) use ($term) {
-                    $a->orWhere('i_tipe','BJ')
-                      ->orWhere('i_tipe','BP');
-                })
-          ->where(function ($b) use ($term) {
-                    $b->where('s_comp','3')
-                      ->where('s_position','3');
-                })
-          ->where(function ($d) use ($term) {
-                    $d->orWhere('m_item.i_type', 'LIKE', '%'.$term.'%')
-                      ->orWhere('m_item.i_name', 'LIKE', '%'.$term.'%');
-                })
-          ->take(50)->get();
-        if ($queries == null) {
-          $results[] = [ 'i_id' => null, 'label' =>'tidak di temukan data terkait'];
-        } else {
-          foreach ($queries as $query) 
-          {
-            $results[] = [ 'id' => $query->i_id, 'label' => $query->i_code .' - '. $query->i_name,
-                           'harga' => $query->i_price, 'kode' => $query->i_id, 'nama' => $query->i_name, 'satuan' => $query->i_unit, 'stok' => $query->s_qty ];
-          }
-        }
-      return Response::json($results); 
-      }
-
-    public function setnama($id)
-      {
-
-       $setnama = DB::table('m_customer')->where('c_name',$id)->first();
-
-        return Response::json($setnama);
-      }
-
-    public function setitem($flag)
-      {
-
-       $setnama = DB::table('m_item')->where('nama_item',$flag)->orWhere('nama_item',$flag)->first();
-        return Response::json($setnama);
-      }
-
     public function sal_save_final(Request $request)
       { 
 
@@ -266,6 +250,7 @@ class POSGrosirController extends Controller
                       'sd_item'=>$request->kode_item[$i],
                       'sd_qty'=>$request->sd_qty[$i],
                       'sd_price'=>($this->konvertRp($request->harga_item[$i])),
+                      'sd_total'=>($this->konvertRp($request->hasil[$i])),
                       'sd_disc_percent'=>$request->sd_disc_percent[$i],
                       'sd_disc_value'=>$request->sd_disc_value[$i]
 
@@ -315,6 +300,7 @@ class POSGrosirController extends Controller
                       'sd_item'=>$request->kode_item[$i],
                       'sd_qty'=>$request->sd_qty[$i],
                       'sd_price'=>($this->konvertRp($request->harga_item[$i])),
+                      'sd_total'=>($this->konvertRp($request->hasil[$i])),
                       'sd_disc_percent'=>$request->sd_disc_percent[$i],
                       'sd_disc_value'=>$request->sd_disc_value[$i]
                   ]);
@@ -362,6 +348,7 @@ class POSGrosirController extends Controller
                       'sd_item'=>$request->kode_item[$i],
                       'sd_qty'=>$request->sd_qty[$i],
                       'sd_price'=>($this->konvertRp($request->harga_item[$i])),
+                      'sd_total'=>($this->konvertRp($request->hasil[$i])),
                       'sd_disc_percent'=>$request->sd_disc_percent[$i],
                       'sd_disc_value'=>$request->sd_disc_value[$i]
                   ]);
@@ -375,6 +362,311 @@ class POSGrosirController extends Controller
                   ->update(['s_qty' => $stokBaru]);
                   
                 }
+
+      }
+
+     public function sal_save_finalUpdate(Request $request)
+      {
+        //dd($request->all());
+        return DB::transaction(function () use ($request) {
+
+           $s_id=$request->sd_id;
+            
+           $m = DB::table('d_sales')->where('s_id',$request->sd_id)->first();
+
+           if ($m->s_status =='DR') {
+
+              DB::table('d_sales')->where('s_id',$request->sd_id)
+                ->update([
+                  's_channel' =>'GR',
+                  's_date' =>date('Y-m-d',strtotime($request->s_date)),
+                  's_note' =>$request->s_nota,
+                  's_staff' =>$request->s_staff,
+                  's_customer' => $request->id_cus,
+                  's_disc_percent' => $request->s_disc_percent,
+                  's_disc_value' => $request->s_disc_value,
+                  's_gross' => ($this->konvertRp($request->s_gross)),
+                  's_tax' => $request->s_pajak,
+                  's_net' => ($this->konvertRp($request->s_gross)),
+                  's_status' => 'FN',
+                  's_insert' => Carbon::now(),
+                  's_update' => $request->s_update
+                  
+                ]);
+
+                  for ($i=0; $i < count($request->kode_item); $i++) 
+                {
+
+                  $stokGrosir = DB::table('d_stock')
+                    ->where('s_comp','3')
+                    ->where('s_position','3')
+                    ->where('s_item',$request->kode_item[$i])->first(); 
+
+                
+                if ($request->sd_sales[$i] == null ){ 
+                  $sd_detailid=DB::table('d_sales_dt')->where('sd_sales',$s_id)->max('sd_detailid');
+                  $d_sales_dt = DB::table('d_sales_dt')
+                    ->where('sd_sales',$s_id)
+                      ->insert([
+                        'sd_sales' =>$s_id,
+                        'sd_detailid'=>$sd_detailid+1,
+                        'sd_qty'=>$request->sd_qty[$i],
+                        'sd_price'=>($this->konvertRp($request->harga_item[$i])),
+                        'sd_item'=>$request->kode_item[$i],
+                        'sd_disc_percent'=>$request->sd_disc_percent[$i],
+                        'sd_disc_value'=>$request->sd_disc_value[$i],
+                        'sd_total'=>($this->konvertRp($request->hasil[$i]))
+
+                ]);
+                      
+                      
+                }else if ($m->s_status =='PR'){
+
+                 $d_sales_dt = DB::table('d_sales_dt')
+                    ->where('sd_sales',$s_id)
+                    ->where('sd_detailid',$request->sd_detailid[$i])
+                      ->update([                        
+                        'sd_item'=>$request->kode_item[$i],
+                        'sd_qty'=>$request->sd_qty[$i],
+                        'sd_price'=>($this->konvertRp($request->harga_item[$i])),
+                        'sd_disc_percent'=>$request->sd_disc_percent[$i],
+                        'sd_disc_value'=>$request->sd_disc_value[$i],
+                        'sd_total'=>($this->konvertRp($request->hasil[$i]))
+                ]);
+
+                $stokBaru = $stokGrosir->s_qty - $request->sd_qty[$i];
+
+                DB::table("d_stock")
+                ->where('s_comp','3')
+                ->where('s_position','3')
+                ->where("s_id", $stokGrosir->s_id)
+                ->update(['s_qty' => $stokBaru]);
+                
+                }
+              }
+           }else{
+            DB::table('d_sales')->where('s_id',$request->sd_id)
+                ->update([
+                  's_channel' =>'GR',
+                  's_date' =>date('Y-m-d',strtotime($request->s_date)),
+                  's_note' =>$request->s_nota,
+                  's_staff' =>$request->s_staff,
+                  's_customer' => $request->id_cus,
+                  's_disc_percent' => $request->s_disc_percent,
+                  's_disc_value' => $request->s_disc_value,
+                  's_gross' => ($this->konvertRp($request->s_gross)),
+                  's_tax' => $request->s_pajak,
+                  's_net' => ($this->konvertRp($request->s_gross)),
+                  's_status' => 'FN',
+                  's_insert' => Carbon::now(),
+                  's_update' => $request->s_update
+                  
+                ]);
+
+                  for ($i=0; $i < count($request->kode_item); $i++) 
+                {
+
+                  $stokGrosir = DB::table('d_stock')
+                    ->where('s_comp','3')
+                    ->where('s_position','3')
+                    ->where('s_item',$request->kode_item[$i])->first(); 
+
+                
+                if ($request->sd_sales[$i] == null ){ 
+                  $sd_detailid=DB::table('d_sales_dt')->where('sd_sales',$s_id)->max('sd_detailid');
+                  $d_sales_dt = DB::table('d_sales_dt')
+                    ->where('sd_sales',$s_id)
+                      ->insert([
+                        'sd_sales' =>$s_id,
+                        'sd_detailid'=>$sd_detailid+1,
+                        'sd_qty'=>$request->sd_qty[$i],
+                        'sd_price'=>($this->konvertRp($request->harga_item[$i])),
+                        'sd_item'=>$request->kode_item[$i],
+                        'sd_disc_percent'=>$request->sd_disc_percent[$i],
+                        'sd_disc_value'=>$request->sd_disc_value[$i],
+                        'sd_total'=>($this->konvertRp($request->hasil[$i]))
+
+                ]);
+                      
+                      
+                }else{
+                 $d_sales_dt = DB::table('d_sales_dt')
+                    ->where('sd_sales',$s_id)
+                    ->where('sd_detailid',$request->sd_detailid[$i])
+                      ->update([                        
+                        'sd_item'=>$request->kode_item[$i],
+                        'sd_qty'=>$request->sd_qty[$i],
+                        'sd_price'=>($this->konvertRp($request->harga_item[$i])),
+                        'sd_disc_percent'=>$request->sd_disc_percent[$i],
+                        'sd_disc_value'=>$request->sd_disc_value[$i],
+                        'sd_total'=>($this->konvertRp($request->hasil[$i]))
+                ]);
+
+                $stokBaru = $stokGrosir->s_qty - $request->sd_qty[$i];
+
+                DB::table("d_stock")
+                ->where('s_comp','3')
+                ->where('s_position','3')
+                ->where("s_id", $stokGrosir->s_id)
+                ->update(['s_qty' => $stokBaru]);
+                
+                }
+              }
+           }
+        });
+
+      }
+
+
+     public function sal_save_onProgresUpdate(Request $request)
+      {
+        //dd($request->all());
+        return DB::transaction(function () use ($request) {
+
+           $s_id=$request->sd_id;
+            
+           $m = DB::table('d_sales')->where('s_id',$request->sd_id)->first();
+
+           if ($m->s_status =='DR') {
+
+              DB::table('d_sales')->where('s_id',$request->sd_id)
+                ->update([
+                  's_channel' =>'GR',
+                  's_date' =>date('Y-m-d',strtotime($request->s_date)),
+                  's_note' =>$request->s_nota,
+                  's_staff' =>$request->s_staff,
+                  's_customer' => $request->id_cus,
+                  's_disc_percent' => $request->s_disc_percent,
+                  's_disc_value' => $request->s_disc_value,
+                  's_gross' => ($this->konvertRp($request->s_gross)),
+                  's_tax' => $request->s_pajak,
+                  's_net' => ($this->konvertRp($request->s_gross)),
+                  's_status' => 'PR',
+                  's_insert' => Carbon::now(),
+                  's_update' => $request->s_update
+                  
+                ]);
+
+                  for ($i=0; $i < count($request->kode_item); $i++) 
+                {
+
+                  $stokGrosir = DB::table('d_stock')
+                    ->where('s_comp','3')
+                    ->where('s_position','3')
+                    ->where('s_item',$request->kode_item[$i])->first(); 
+
+                
+                if ($request->sd_sales[$i] == null ){ 
+                  $sd_detailid=DB::table('d_sales_dt')->where('sd_sales',$s_id)->max('sd_detailid');
+                  $d_sales_dt = DB::table('d_sales_dt')
+                    ->where('sd_sales',$s_id)
+                      ->insert([
+                        'sd_sales' =>$s_id,
+                        'sd_detailid'=>$sd_detailid+1,
+                        'sd_qty'=>$request->sd_qty[$i],
+                        'sd_price'=>($this->konvertRp($request->harga_item[$i])),
+                        'sd_item'=>$request->kode_item[$i],
+                        'sd_disc_percent'=>$request->sd_disc_percent[$i],
+                        'sd_disc_value'=>$request->sd_disc_value[$i],
+                        'sd_total'=>($this->konvertRp($request->hasil[$i]))
+
+                ]);
+                      
+                      
+                }else{
+                 $d_sales_dt = DB::table('d_sales_dt')
+                    ->where('sd_sales',$s_id)
+                    ->where('sd_detailid',$request->sd_detailid[$i])
+                      ->update([                        
+                        'sd_item'=>$request->kode_item[$i],
+                        'sd_qty'=>$request->sd_qty[$i],
+                        'sd_price'=>($this->konvertRp($request->harga_item[$i])),
+                        'sd_disc_percent'=>$request->sd_disc_percent[$i],
+                        'sd_disc_value'=>$request->sd_disc_value[$i],
+                        'sd_total'=>($this->konvertRp($request->hasil[$i]))
+                ]);
+
+                $stokBaru = $stokGrosir->s_qty - $request->sd_qty[$i];
+
+                DB::table("d_stock")
+                ->where('s_comp','3')
+                ->where('s_position','3')
+                ->where("s_id", $stokGrosir->s_id)
+                ->update(['s_qty' => $stokBaru]);
+                
+                }
+              }
+           }
+        });
+
+      }
+
+     public function sal_save_draftUpdate(Request $request)
+      {
+        //dd($request->all());
+        return DB::transaction(function () use ($request) {
+
+           $s_id=$request->sd_id;
+            
+           $m = DB::table('d_sales')->where('s_id',$request->sd_id)->first();
+
+           if ($m->s_status =='DR') {
+
+              DB::table('d_sales')->where('s_id',$request->sd_id)
+                ->update([
+                  's_channel' =>'GR',
+                  's_date' =>date('Y-m-d',strtotime($request->s_date)),
+                  's_note' =>$request->s_nota,
+                  's_staff' =>$request->s_staff,
+                  's_customer' => $request->id_cus,
+                  's_disc_percent' => $request->s_disc_percent,
+                  's_disc_value' => $request->s_disc_value,
+                  's_gross' => ($this->konvertRp($request->s_gross)),
+                  's_tax' => $request->s_pajak,
+                  's_net' => ($this->konvertRp($request->s_gross)),
+                  's_status' => 'DR',
+                  's_insert' => Carbon::now(),
+                  's_update' => $request->s_update
+                  
+                ]);
+
+                  for ($i=0; $i < count($request->kode_item); $i++) 
+                {
+                
+                if ($request->sd_sales[$i] == null ){ 
+                  $sd_detailid=DB::table('d_sales_dt')->where('sd_sales',$s_id)->max('sd_detailid');
+                  $d_sales_dt = DB::table('d_sales_dt')
+                    ->where('sd_sales',$s_id)
+                      ->insert([
+                        'sd_sales' =>$s_id,
+                        'sd_detailid'=>$sd_detailid+1,
+                        'sd_qty'=>$request->sd_qty[$i],
+                        'sd_price'=>($this->konvertRp($request->harga_item[$i])),
+                        'sd_item'=>$request->kode_item[$i],
+                        'sd_disc_percent'=>$request->sd_disc_percent[$i],
+                        'sd_disc_value'=>$request->sd_disc_value[$i],
+                        'sd_total'=>($this->konvertRp($request->hasil[$i]))
+
+                ]);
+                      
+                      
+                }else{
+                 $d_sales_dt = DB::table('d_sales_dt')
+                    ->where('sd_sales',$s_id)
+                    ->where('sd_detailid',$request->sd_detailid[$i])
+                      ->update([                        
+                        'sd_item'=>$request->kode_item[$i],
+                        'sd_qty'=>$request->sd_qty[$i],
+                        'sd_price'=>($this->konvertRp($request->harga_item[$i])),
+                        'sd_disc_percent'=>$request->sd_disc_percent[$i],
+                        'sd_disc_value'=>$request->sd_disc_value[$i],
+                        'sd_total'=>($this->konvertRp($request->hasil[$i]))
+                ]);
+
+                }
+              }
+           }
+        });
 
       }
      
@@ -450,6 +742,7 @@ class POSGrosirController extends Controller
         $tgl2 = $y2.'-'.$m2.'-'.$d2;
 
       $detalis = DB::table('d_sales')
+        ->join('m_customer','m_customer.c_id','=','d_sales.s_customer')
         ->where('s_channel','GR')
         ->where('s_date','>=',$tgll)
         ->where('s_date','<=',$tgl2)
@@ -471,10 +764,11 @@ class POSGrosirController extends Controller
         $tgl2 = $y2.'-'.$m2.'-'.$d2;
 
       $leagues = DB::table('d_sales_dt')
-        ->select('sd_item','s_date','i_name', DB::raw("sum(sd_qty) as jumlah"))
+        ->select('sd_item','s_date','i_name','i_type','i_group', DB::raw("sum(sd_qty) as jumlah"))
         ->join('m_item', 'm_item.i_id', '=' , 'd_sales_dt.sd_item')
         ->join('d_sales', 'd_sales.s_id', '=' , 'd_sales_dt.sd_sales')
         ->where('s_channel','GR')
+        ->where('s_status','FN')
         ->where('s_date','>=',$tgll)
         ->where('s_date','<=',$tgl2)
         ->groupBy('sd_item','i_name')

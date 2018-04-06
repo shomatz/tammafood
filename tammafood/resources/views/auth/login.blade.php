@@ -151,23 +151,7 @@
             return true;
         }
 
-toastr.options = {
-  "closeButton": false,
-  "debug": false,
-  "newestOnTop": false,
-  "progressBar": false,
-  "positionClass": "toast-top-full-width",
-  "preventDuplicates": false,
-  "onclick": null,
-  "showDuration": "30000",
-  "hideDuration": "100000",
-  "timeOut": "50000",
-  "extendedTimeOut": "10000",
-  "showEasing": "swing",
-  "hideEasing": "linear",
-  "showMethod": "fadeIn",
-  "hideMethod": "fadeOut"
-}
+
     </script>
 
 

@@ -1,4 +1,4 @@
-@extends('main')  
+@extends('main')
 @section('content')
             <!--BEGIN PAGE WRAPPER-->
             <div id="page-wrapper">
@@ -37,86 +37,10 @@
                                  
                                   <div class="row" style="margin-top:-15px;">
 
-                                    <!-- Modal Nota-->
-
-                                    <div class="modal fade" id="nota" role="dialog">
-                                      <div class="modal-dialog" >
-                                          <!-- Modal content-->
-                                            <div class="modal-content">
-                                              <div class="modal-header" style="background-color: #e77c38;">
-                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                                <h4 class="modal-title" style="color: white;">Jumlah Nota</h4>
-                                              </div>
-
-                                              <div class="modal-body">
-
-                                                
-
-                                                <div class="table-responsive">
-                                                  <table class="table tabelan table-hover table-bordered">
-                                                    <thead>
-                                                      <tr>
-                                                        <th>No Nota</th>
-                                                        <th>Tanggal</th>
-                                                        <th>Jumlah Order</th>
-                                                      </tr>
-                                                    </thead>
-                                                    <tbody id="table-nota">
-                                                      
-                                                    </tbody>
-                                                  </table>
-                                                </div>
-                                                
-                                              </div>
-                                          
-                                              <div class="modal-footer">
-                                                <button type="button" class="btn btn-warning " data-dismiss="modal">Close</button>
-                                                
-                                              </div>
-                                            </div>
-                                             
-                                        </div>
-                                    </div><!-- End Modal -->
+                                    @include('produksi.monitoringprogress.modal')
                                    
                                       <div class="col-md-12 col-sm-12 col-xs-12">
                                         <div class="table-responsive" style="margin-top:10px;">
-
-                              <!--
-                              <div class="col-md-8 col-sm-12 col-xs-12" style="padding-bottom: 10px;">
-                                <div style="margin-left:-30px;">
-                                  <div class="col-md-3 col-sm-2 col-xs-12">
-                                    <label class="tebal">Tanggal</label>
-                                  </div>
-
-                                  <div class="col-md-6 col-sm-7 col-xs-12">
-                                    <div class="form-group" style="display: ">
-                                      <div class="input-daterange input-group">
-                                        <input id="tanggal1" class="form-control input-sm datepicker2 " name="tanggal" type="text" value="{{ date('d-m-Y') }}">
-                                        <span class="input-group-addon">-</span>
-                                        <input id="tanggal2" class="input-sm form-control datepicker2" name="tanggal" type="text" value="{{ date('d-m-Y') }}">
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-
-                                <div class="col-md-3 col-sm-3 col-xs-12" align="center">
-                                  <button class="btn btn-primary btn-sm btn-flat" type="button" onclick="cariTanggal()">
-                                    <strong>
-                                      <i class="fa fa-search" aria-hidden="true"></i>
-                                    </strong>
-                                  </button>
-                                  <button class="btn btn-info btn-sm btn-flat" type="button" onclick="refresh()">
-                                    <strong>
-                                      <i class="fa fa-undo" aria-hidden="true"></i>
-                                    </strong>
-                                  </button>
-                                </div>
-                                
-                              </div>
-
-                            -->
-
-
                                           <table class="table tabelan table-hover table-bordered" width="100%" cellspacing="0" id="data">
                                            <thead>
                                               <tr>
@@ -132,8 +56,47 @@
                                               </tr>
                                             </thead>
                                             <tbody>
-                                              
-                  
+                                              <tr>
+                                                <td>111</td>
+                                                <td>Tortilla</td>
+                                                 <td><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#nota">3 Nota</button></td>
+                                                <td>24</td>
+                                                <td>12</td>
+                                                <td>12</td>
+                                                <td>20</td>
+                                                <td>-</td>
+                                                <td>
+                                                  <a href="#" data-toggle="modal" data-target="#modal" class="btn btn-info btn-sm">Plan</a>
+                                                </td>
+                                              </tr>
+                                              <tr>
+                                                
+                                                <td>112</td>
+                                                <td>Kebab</td>
+                                                 <td><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#nota">4 Nota</button></td>
+                                                <td>30</td>
+                                                <td>10</td>
+                                                <td>10</td>
+                                                <td>20</td>
+                                                <td>-</td>
+                                               <td>
+                                                  <a href="#" data-toggle="modal" data-target="#modal" class="btn btn-info btn-sm">Plan</a>
+                                                </td>
+                                              </tr>
+                                              <tr>
+                                                
+                                                <td>113</td>
+                                                <td>Burger</td>
+                                                 <td><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#nota">5 Nota</button></td>
+                                                <td>24</td>
+                                                <td>8</td>
+                                                <td>14</td>
+                                                <td>10</td>
+                                                <td>-4</td>
+                                                <td>
+                                                  <a href="#" data-toggle="modal" data-target="#modal" class="btn btn-info btn-sm">Plan</a>
+                                                </td>
+                                              </tr>
                                             </tbody>
                                           </table> 
                                         </div>                                       
@@ -162,9 +125,17 @@
                                                   <th>Jumlah Rencana Produksi</th>
                                                   <th>Status SPK</th>
                                                 </thead>
-                                                <tbody id="table-plan">
-                                                  
-
+                                                <tbody>
+                                                  <tr>
+                                                    <td>25/02/2018</td>
+                                                    <td>1</td>
+                                                    <td><i class="fa fa-check"></i></td>
+                                                  </tr>
+                                                  <tr>
+                                                    <td>26/02/2018</td>
+                                                    <td>1</td>
+                                                    <td><i class="fa fa-times"></i></td>
+                                                  </tr>
                                                 </tbody>
                                               </table>
                                             </div>
@@ -173,7 +144,7 @@
                                               
                                           <div class="modal-footer">
                                             <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
-                                            <button type="submit" class="btn btn-primary" onclick="plan()">Simpan Data</button>
+                                            
                                           </div>
 
                                         </div>
@@ -189,7 +160,7 @@
                   <div id="note-tab" class="tab-pane fade">
                     <div class="row">
                       <div class="panel-body">
-                        <!-- Isi Content -->
+                        <!-- Isi Content -->we we we
                       </div>
                     </div>
                   </div><!--/div note-tab -->
@@ -212,8 +183,8 @@
 
 @endsection
 @section("extra_scripts")
-<script type="text/javascript">
-  $(document).ready(function() {
+    <script type="text/javascript">
+     $(document).ready(function() {
     var extensions = {
          "sFilterInput": "form-control input-sm",
         "sLengthSelect": "form-control input-sm"
@@ -223,42 +194,24 @@
     // Used when bJQueryUI is true
     $.extend($.fn.dataTableExt.oJUIClasses, extensions);
     $('#data').dataTable({
-        "responsive":true,
-        "pageLength": 10,
+          "responsive":true,
+
+          "pageLength": 10,
         "lengthMenu": [[10, 20, 50, - 1], [10, 20, 50, "All"]],
         "language": {
             "searchPlaceholder": "Cari Data",
             "emptyTable": "Tidak ada data",
             "sInfo": "Menampilkan _START_ - _END_ Dari _TOTAL_ Data",
-            "infoFiltered" : "",
             "sSearch": '<i class="fa fa-search"></i>',
             "sLengthMenu": "Menampilkan &nbsp; _MENU_ &nbsp; Data",
             "infoEmpty": "",
-            "zeroRecords": "Data tidak ditemukan",
             "paginate": {
                     "previous": "Sebelumnya",
                     "next": "Selanjutnya",
-                }
-          },
+                 }
+          }
 
-        "ajax":{
-              "url" : baseUrl + "/produksi/monitoringprogress/tabel",
-              "type": "GET",
-              
-        },
-        "columns": [
-            { "data": "sd_item" },
-            { "data": "i_name" },
-            { "data": "jumlah" },
-            { "data": "nota" },
-            { "data": "s_qty" },
-            { "data": "j_butuh" },
-            { "data": "pp_qty" },
-            { "data": "j_kurang" },
-            { "data": "plan" },
-        ]
-
-    });
+        });
     $('#data2').dataTable({
           "responsive":true,
 
@@ -296,80 +249,15 @@
                  }
           }
 
-    });
-
-    $(document).on('click','.plan',function(){
-        var id = $(this).data('id');
-        console.log('plan '+id);
-        $.ajax({
-        url : baseUrl + "/produksi/monitoringprogress/plan/"+id,
-        type: 'get',   
-        
-        success:function(response)
-        {
-
-         $('#table-plan').html(response);
-        }
-      });
-    });
-
-    $(document).on('click','.nota',function(){
-        var id = $(this).data('id');
-        console.log('nota '+id);
-        $.ajax({
-        url : baseUrl + "/produksi/monitoringprogress/"+id,
-        type: 'get',   
-        
-        success:function(response)
-        {
-
-         $('#table-nota').html(response);
-        }
-      });
-    });
-
+        });
 });
-
-    $(".datepicker").datepicker({
-        dateFormat: "yy-mm-dd",
-        altFormat: "yy-mm-dd",
-        changeMonth: true,
-        changeYear: true
+      $('.datepicker').datepicker({
+        format: "mm",
+        viewMode: "months",
+        minViewMode: "months"
       });
-
-    $('.datepicker2').datepicker({
-        format:"dd-mm-yyyy"
+      $('.datepicker2').datepicker({
+        format:"dd/mm/yyyy"
       });    
-
-    function cariTanggal()
-    {
-      var tgl1=$('#tanggal1').val();
-      var tgl2=$('#tanggal2').val();
-      console.log(tgl1);
-      $.ajax({
-        url : baseUrl + "/produksi/monitoringprogress/"+tgl1+'/'+tgl2,
-        type: 'get',   
-        
-        success:function(response)
-        {
-
-         $('#data-search').html(response);
-        }
-      });
-    }
-
-    function refresh()
-    {
-      $.ajax({
-        url : baseUrl + "/produksi/monitoringprogress/refresh",
-        type: 'get',   
-        
-        success:function(response)
-        {
-
-         $('#data-search').html(response);
-        }
-      });
-    }
       </script>
 @endsection()
