@@ -1,4 +1,4 @@
-  
+
 <?php
 
 /*
@@ -85,40 +85,15 @@ Route::get('/inventory/b_digunakan/tambah_barang', 'InventoryController@tambah_b
 Route::get('/inventory/stockopname/tambah_opname', 'InventoryController@tambah_opname');
 
 /*Produksi*/
-//Route::get('/produksi/rencanaproduksi/produksi', 'ProduksiController@produksi');
+Route::get('/produksi/rencanaproduksi/produksi', 'ProduksiController@produksi');
 Route::get('/produksi/spk/spk', 'ProduksiController@spk');
 Route::get('/produksi/bahanbaku/baku', 'ProduksiController@baku');
 Route::get('/produksi/sdm/sdm', 'ProduksiController@sdm');
 Route::get('/produksi/produksi/produksi2', 'ProduksiController@produksi2');
 Route::get('/produksi/o_produksi/produksi3', 'ProduksiController@produksi3');
 Route::get('/produksi/waste/waste', 'ProduksiController@waste');
-//Route::get('/produksi/monitoringprogress/monitoring', 'ProduksiController@monitoring');
+Route::get('/produksi/monitoringprogress/monitoring', 'ProduksiController@monitoring');
 Route::get('/produksi/o_produksi/tambah_produksi', 'ProduksiController@tambah_produksi');
-
-
-
-/* Monitoring */
-Route::get('/produksi/monitoringprogress/monitoring', 'Produksi\MonitoringProgressController@monitoring');
-Route::get('/produksi/monitoringprogress/tabel', 'Produksi\MonitoringProgressController@tabel');
-Route::get('/produksi/monitoringprogress/{id}', 'Produksi\MonitoringProgressController@nota');
-Route::get('/produksi/monitoringprogress/plan/{id}', 'Produksi\MonitoringProgressController@plan');
-Route::get('/produksi/monitoringprogress/{tgl1}/{tgl2}','Produksi\MonitoringProgressController@search');
-Route::get('/produksi/monitoringprogress/refresh','Produksi\MonitoringProgressController@refresh');
-
-
-/* Rencana Produksi */
-Route::get('/produksi/rencanaproduksi/tabel', 'Produksi\RencanaProduksiController@tabel');
-Route::get('/produksi/rencanaproduksi/produksi', 'Produksi\RencanaProduksiController@produksi');
-
-Route::get('/produksi/rencanaproduksi/save', 'Produksi\RencanaProduksiController@save');
-Route::get('/produksi/rencanaproduksi/hapus_rencana/{id}','Produksi\RencanaProduksiController@hapus_rencana');
-Route::patch('/produksi/rencanaproduksi/produksi/edit_rencana', 'Produksi\RencanaProduksiController@edit_rencana');
-Route::get('/produksi/rencanaproduksi/produksi/autocomplete', 'Produksi\RencanaProduksiController@autocomplete');
-
-
-
-
-
 
 /*Penjualan*/
 Route::get('/penjualan/manajemenharga/harga', 'PenjualanController@harga');
@@ -135,57 +110,55 @@ Route::get('/penjualan/mutasistok/mutasi', 'PenjualanController@mutasi');
 Route::get('/penjualan/broadcastpromosi/tambah_promosi2', 'PenjualanController@tambah_promosi2');
 
 //POSRetail
-Route::get('/penjualan/POSretail/retail', 'Penjualan\POSRetailController@retail');
+Route::get('/penjualan/POSretail/index', 'Penjualan\POSRetailController@retail');
 Route::get('/penjualan/POSretail/retail/store', 'Penjualan\POSRetailController@store');
 Route::get('/penjualan/POSretail/retail/autocomplete', 'Penjualan\POSRetailController@autocomplete');
 Route::get('/penjualan/POSretail/retail/setnama/{id}', 'Penjualan\POSRetailController@setnama');
 Route::get('/penjualan/POSretail/retail/sal_save_final', 'Penjualan\POSRetailController@sal_save_final');
 Route::get('/penjualan/POSretail/retail/sal_save_draft', 'Penjualan\POSRetailController@sal_save_draft');
 Route::get('/penjualan/POSretail/retail/sal_save_onprogres', 'Penjualan\POSRetailController@sal_save_onProgres');
+Route::get('/penjualan/POSretail/retail/sal_save_finalupdate', 'Penjualan\POSRetailController@sal_save_finalUpdate');
+Route::get('/penjualan/POSretail/retail/sal_save_onProgresUpdate', 'Penjualan\POSRetailController@sal_save_onProgresUpdate');
+Route::get('/penjualan/POSretail/retail/sal_save_draftUpdate', 'Penjualan\POSRetailController@sal_save_draftUpdate');
 Route::get('/penjualan/POSretail/retail/create', 'Penjualan\POSRetailController@create');
 Route::get('/penjualan/POSretail/retail/create_sal', 'Penjualan\POSRetailController@create_sal');
 Route::get('/penjualan/POSretail/retail/edit_sales/{id}', 'Penjualan\POSRetailController@edit_sales');
 Route::get('/penjualan/POSretail/retail/distroy/{id}', 'Penjualan\POSRetailController@distroy');
 Route::put('/penjualan/POSretail/retail/update/{id}', 'Penjualan\POSRetailController@update');
 Route::get('/penjualan/POSretail/retail/autocompleteitem', 'Penjualan\POSRetailController@autocompleteitem');
-Route::get('/penjualan/POSretail/retail/autocompletereq', 'Penjualan\POSRetailController@autocompletereq');
+Route::get('/penjualan/POSretail/retail/transfer-item', 'Penjualan\stockController@transferItem');
 Route::get('/penjualan/POSretail/retail/item_save', 'Penjualan\POSRetailController@item_save');
 Route::get('/penjualan/POSretail/getdata', 'Penjualan\POSRetailController@detail');
 Route::get('/penjualan/POSretail/getdataReq', 'Penjualan\POSRetailController@detailReq');
-Route::get('/penjualan/POSretail/retail/detail_request_save', 'Penjualan\POSRetailController@detail_request_save');
+Route::get('/penjualan/POSretail/retail/simpan-transfer', 'transferItemController@simpanTransfer');
+Route::get('/penjualan/POSretail/transfer', 'transferItemController@index');
 Route::get('/penjualan/POSretail/get-tanggal/{tgl1}/{tgl2}', 'Penjualan\POSRetailController@getTanggal');
 Route::get('/penjualan/POSretail/get-tanggaljual/{tgl1}/{tgl2}', 'Penjualan\POSRetailController@getTanggalJual');
+//thoriq stock penjualan retail
+Route::get('/penjualan/POSretail/stock/table-stock', 'Penjualan\stockController@tableStock');
 
 
 //POSGrosir
-Route::get('/penjualan/POSgrosir/grosir', 'Penjualan\POSGrosirController@grosir');
+Route::get('/penjualan/POSgrosir/index', 'Penjualan\POSGrosirController@grosir');
 Route::get('/penjualan/POSgrosir/grosir/store', 'Penjualan\POSGrosirController@store');
 Route::get('/penjualan/POSgrosir/grosir/autocomplete', 'Penjualan\POSGrosirController@autocomplete');
-Route::get('/penjualan/POSgrosir/grosir/setnama/{id}', 'Penjualan\POSGrosirController@setnama');
 Route::get('/penjualan/POSgrosir/grosir/sal_save_final', 'Penjualan\POSGrosirController@sal_save_final');
 Route::get('/penjualan/POSgrosir/grosir/sal_save_draft', 'Penjualan\POSGrosirController@sal_save_draft');
 Route::get('/penjualan/POSgrosir/grosir/sal_save_onprogres', 'Penjualan\POSGrosirController@sal_save_onProgres');
+Route::get('/penjualan/POSgrosir/grosir/sal_save_finalupdate', 'Penjualan\POSGrosirController@sal_save_finalUpdate');
+Route::get('/penjualan/POSgrosir/grosir/sal_save_onProgresUpdate', 'Penjualan\POSGrosirController@sal_save_onProgresUpdate');
+Route::get('/penjualan/POSgrosir/grosir/sal_save_draftUpdate', 'Penjualan\POSGrosirController@sal_save_draftUpdate');
 Route::get('/penjualan/POSgrosir/grosir/create', 'Penjualan\POSGrosirController@create');
 Route::get('/penjualan/POSgrosir/grosir/create_sal', 'Penjualan\POSGrosirController@create_sal');
 Route::get('/penjualan/POSgrosir/grosir/edit_sales/{id}', 'Penjualan\POSGrosirController@edit_sales');
 Route::get('/penjualan/POSgrosir/grosir/distroy/{id}', 'Penjualan\POSGrosirController@distroy');
 Route::put('/penjualan/POSgrosir/grosir/update/{id}', 'Penjualan\POSGrosirController@update');
 Route::get('/penjualan/POSgrosir/grosir/autocompleteitem', 'Penjualan\POSGrosirController@autocompleteitem');
-Route::get('/penjualan/POSgrosir/grosir/autocompletereq', 'Penjualan\POSGrosirController@autocompletereq');
 Route::get('/penjualan/POSgrosir/grosir/item_save', 'Penjualan\POSGrosirController@item_save');
 Route::get('/penjualan/POSgrosir/getdata', 'Penjualan\POSGrosirController@detail');
-Route::get('/penjualan/POSgrosir/getdataGReq', 'Penjualan\POSGrosirController@detailReq');
 Route::get('/penjualan/POSgrosir/grosir/req_retail', 'Penjualan\POSGrosirController@req_retail');
-Route::get('/penjualan/POSgrosir/grosir/tambahItemReq', 'Penjualan\POSGrosirController@tambahItemReq');
 Route::get('/penjualan/POSgrosir/get-tanggal/{tgl1}/{tgl2}', 'Penjualan\POSGrosirController@getTanggal');
 Route::get('/penjualan/POSgrosir/get-tanggaljual/{tgl1}/{tgl2}', 'Penjualan\POSGrosirController@getTanggalJual');
-
-//thoriq stock penjualan retail
-Route::get('/penjualan/POSretail/stock/table-stock', 'Penjualan\stockController@tableStock');
-
-//shomat update stock
-Route::get('/penjualan/POSretail/stock/update/{id}', 'Penjualan\stockController@update');
-
 
 /*HRD*/
 Route::get('/hrd/manajemenkpipegawai/kpi', 'HrdController@kpi');
@@ -219,4 +192,18 @@ Route::get('/system/thnfinansial/finansial', 'SystemController@finansial');
 Route::get('/system/hakuser/tambah_user', 'SystemController@tambah_user');
 Route::get('/system/hakakses/tambah_akses', 'SystemController@tambah_akses');
 
+
+//thoriq 
+//transfer retail
+Route::get('transfer/data-transfer', 'transferItemController@dataTransfer');
+Route::get('transfer/data-transfer/{id}/edit', 'transferItemController@editTransfer');
+//transfer selesai
+
+//transfer grosir
+Route::get('penjualan/POSgrosir/transfer', 'transferItemController@indexGrosir');
+Route::get('penjualan/POSgrosir/approve-transfer/{id}/edit', 'transferItemController@approveTransfer');
+Route::get('penjualan/POSgrosir/approve-transfer/simpan-approve', 'transferItemController@simpanApprove');
+//transfer selesai
+
+//thoriq
 

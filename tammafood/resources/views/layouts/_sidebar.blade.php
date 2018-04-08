@@ -185,9 +185,13 @@
                             </li>
                             <li class="{{ Request::is('penjualan/rencanapenjualan/rencana') ? 'active' : '' || Request::is('penjualan/rencanapenjualan/*') ? 'active' : '' }}"><a href="{{ url('/penjualan/rencanapenjualan/rencana') }}"><span class="submenu-title">Rencana Penjualan</span></a>
                             </li>
-                            <li class="{{ Request::is('penjualan/POSretail/retail') ? 'active' : '' || Request::is('penjualan/POSretail/*') ? 'active' : '' }}"><a href="{{ url('/penjualan/POSretail/retail') }}"><span class="submenu-title">POS Penjualan Retail</span></a>
+                            <li class="{{ Request::is('penjualan/POSretail/retail') ? 'active' : '' || Request::is('penjualan/POSretail/*') ? 'active' : '' }}"><a href="{{ url('/penjualan/POSretail/index') }}"><span class="submenu-title">POS Penjualan Retail</span></a>
                             </li>
-                            <li class="{{ Request::is('penjualan/POSgrosir/grosir') ? 'active' : '' || Request::is('penjualan/POSgrosir/*') ? 'active' : '' }}"><a href="{{ url('/penjualan/POSgrosir/grosir') }}"><span class="submenu-title">POS Penjualan Grosir / Online</span></a>
+                            <li class="{{ Request::is('penjualan/POSretail/transfer') ? 'active' : '' || Request::is('penjualan/POSretail/transfer/*') ? 'active' : '' }}"><a href="{{ url('penjualan/POSretail/transfer') }}"><span class="submenu-title">Ritail Transfer</span></a>
+                            </li>
+                            <li class="{{ Request::is('penjualan/POSgrosir/grosir') ? 'active' : '' || Request::is('penjualan/POSgrosir/*') ? 'active' : '' }}"><a href="{{ url('/penjualan/POSgrosir/index') }}"><span class="submenu-title">POS Penjualan Grosir / Online</span></a>
+                            </li>
+                            <li class="{{ Request::is('penjualan/POSgrosir/transfer') ? 'active' : '' || Request::is('penjualan/POSgrosir/transfer/*') ? 'active' : '' }}"><a href="{{ url('penjualan/POSgrosir/transfer') }}"><span class="submenu-title">Grosir Transfer</span></a>
                             </li>
                             <li class="{{ Request::is('penjualan/monitoringorder/monitoring') ? 'active' : '' || Request::is('penjualan/monitoringorder/*') ? 'active' : '' }}"><a href="{{ url('/penjualan/monitoringorder/monitoring') }}"><span class="submenu-title">Monitoring Order & Stock</span></a>
                             </li>

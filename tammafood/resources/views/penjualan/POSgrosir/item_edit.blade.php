@@ -60,7 +60,7 @@
             </td>
             <td><input type="text" style="text-align:right" class="form-control discvalue" value="" onkeyup="discvalue(this, event)">
             </td>
-            <td>
+            <td >
               <input type="text" size="200" readonly style="text-align:right" name="hasil[]" id="hasil" class="form-control hasil hasil-{{ $x->i_id }}" value="Rp. {{ number_format( $x->sd_total ,2,',','.')}}"><input type="hidden" size="200" readonly style="text-align:right" name="" id="hasil2" class="hasil2 form-control" value="'+b+'">
             </td>
             <td>

@@ -31,7 +31,7 @@
          <th width="2%">Jumlah</th>
          <th width="2%">Satuan</th>
          <th width="15%">Harga</th>
-         <th>Disc Percent</th>
+         <th width="2%">Disc Percent</th>
          <th>Disc Value</th>
          <th width="15%">Total</th>
          <th><button class="hidden" onclick="tambah()">add</button></th>
